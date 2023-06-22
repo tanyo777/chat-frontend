@@ -5,6 +5,7 @@ import Chat from "./pages/chat/Chat";
 import Protected from "./components/protectedRoute/Protected";
 import Public from "./components/publicRoute/Public";
 import Register from "./pages/register/Register";
+import NotFoundPage from "./pages/404/404Page";
 
 function App() {
   return (
@@ -32,6 +33,15 @@ function App() {
           <Protected>
             <Chat />
           </Protected>
+        }
+      />
+
+      <Route
+        path="*"
+        element={
+          <Public>
+            <NotFoundPage />
+          </Public>
         }
       />
     </Routes>
