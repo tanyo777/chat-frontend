@@ -1,11 +1,12 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 import { IRegisterPayload, ILoginPayload } from "../types/auth";
+import { envVariables } from "../config/envVars";
 
 export const authApi = createApi({
   reducerPath: "authApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: process.env.REACT_APP_SERVER,
+    baseUrl: envVariables.backendUrl,
     credentials: "include",
   }),
   endpoints: (builder) => ({
