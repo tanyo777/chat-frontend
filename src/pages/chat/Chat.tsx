@@ -16,8 +16,10 @@ const socket = io(envVariables.backendUrl, {
 
 const Chat = () => {
   socket.connect();
-  const [logout, { isSuccess: isLogoutSuccess, isError: isLogoutError }] =
-    useLazyLogoutQuery();
+  const [
+    logout,
+    { isSuccess: isLogoutSuccess, isError: isLogoutError, isLoading },
+  ] = useLazyLogoutQuery();
 
   const [messages, setMessages] = useState<IMessage[]>([]);
   const [connected, setConnected] = useState(false);
@@ -31,7 +33,7 @@ const Chat = () => {
       if (!accessToken) {
         logout();
       }
-    }, toMiliSeconds(0, 1, 0));
+    }, toMiliSeconds(0, 0, 10));
 
     return () => {
       clearInterval(accessTokenInterval);
@@ -40,12 +42,12 @@ const Chat = () => {
 
   useEffect(() => {
     if (isLogoutSuccess || isLogoutError) {
-      navigate("/", { replace: true });
+      navigate("/");
     }
   }, [isLogoutSuccess, isLogoutError]);
 
   const logoutHandler = async () => {
-    logout();
+    await logout();
   };
 
   useEffect(() => {

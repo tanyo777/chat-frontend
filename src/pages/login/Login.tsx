@@ -1,8 +1,12 @@
 import { useForm } from "react-hook-form";
 import { useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import { Button, CircularProgress, InputLabel, TextField } from "@mui/material";
 
 import { useLoginMutation } from "../../api/authApi";
+import FormHeading from "../../components/forms/formHeading/FormHeading";
+import FormAlert from "../../components/forms/alert/FormAlert";
+import { EAlertSeverity } from "../../types/componentProps";
 
 const Login = () => {
   const [login, { isLoading, isError, error, isSuccess }] = useLoginMutation();
@@ -16,6 +20,10 @@ const Login = () => {
   } = useForm();
 
   useEffect(() => {
+    document.title = "Chat - Login";
+  }, []);
+
+  useEffect(() => {
     if (isSuccess) {
       navigate("/chat");
     }
@@ -26,28 +34,56 @@ const Login = () => {
   };
 
   return (
-    <div>
-      <form
-        onSubmit={handleSubmit(loginHandler)}
-        style={{ display: "flex", flexDirection: "column", width: "400px" }}
-      >
-        <label>Email</label>
-        <input {...register("email", { required: true })} />
-        {errors.email && <p>Email is required</p>}
+    <div className="formContainer">
+      <form onSubmit={handleSubmit(loginHandler)} style={{ width: "40%" }}>
+        <FormHeading title="Login" />
 
-        <label>Password</label>
-        <input {...register("password", { required: true })} type="password" />
-        {errors.password && <p>Password is required</p>}
+        <div className="formControlContainer">
+          <InputLabel>Email</InputLabel>
+          <TextField
+            fullWidth
+            {...register("email", { required: "Email is required" })}
+            placeholder="Enter valid email..."
+            size="small"
+            helperText={errors.email && <p>{errors.email.message as string}</p>}
+          />
+        </div>
+
+        <div className="formControlContainer">
+          <InputLabel>Password</InputLabel>
+          <TextField
+            fullWidth
+            {...register("password", { required: "Password is required" })}
+            type="password"
+            placeholder="Enter password..."
+            size="small"
+            helperText={
+              errors.password && <p>{errors.password.message as string}</p>
+            }
+          />
+        </div>
 
         <p>
           You don't have an acount? <NavLink to="/register">Register</NavLink>
         </p>
 
-        <input type="submit" value={isLoading ? "Loading..." : "Login"} />
+        {isLoading && <CircularProgress />}
+
+        {!isLoading && (
+          <Button type="submit" variant="contained">
+            Login
+          </Button>
+        )}
+
+        {/* errors */}
         {isError &&
           ((error as any).data as any).msg.map(
             (errorMessage: string, index: string) => (
-              <p key={index}>{errorMessage}</p>
+              <FormAlert
+                key={index}
+                message={errorMessage}
+                severity={EAlertSeverity.ERROR}
+              />
             )
           )}
       </form>
