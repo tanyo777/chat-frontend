@@ -28,6 +28,10 @@ const Register = () => {
   } = useForm();
 
   useEffect(() => {
+    document.title = "Chat - Register";
+  }, []);
+
+  useEffect(() => {
     if (isRegistrationSuccess) {
       navigate("/");
     }
