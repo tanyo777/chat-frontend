@@ -42,6 +42,7 @@ const Chat = () => {
 
   useEffect(() => {
     if (isLogoutSuccess || isLogoutError) {
+      Cookies.remove("access_token");
       navigate("/");
     }
   }, [isLogoutSuccess, isLogoutError]);
