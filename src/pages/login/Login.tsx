@@ -35,7 +35,7 @@ const Login = () => {
 
   return (
     <div className="formContainer">
-      <form onSubmit={handleSubmit(loginHandler)} style={{ width: "40%" }}>
+      <form onSubmit={handleSubmit(loginHandler)}>
         <FormHeading title="Login" />
 
         <div className="formControlContainer">

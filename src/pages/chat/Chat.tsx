@@ -48,7 +48,7 @@ const Chat = () => {
   }, [isLogoutSuccess, isLogoutError]);
 
   const logoutHandler = async () => {
-    await logout();
+    logout();
   };
 
   useEffect(() => {
@@ -74,6 +74,10 @@ const Chat = () => {
 
     socket.on("sendAllMessages", (messages: IMessage[]) => {
       setMessages(messages);
+    });
+
+    socket.on("unauthenticated", (messages: IMessage[]) => {
+      logout();
     });
 
     socket.on("disconnect", () => {

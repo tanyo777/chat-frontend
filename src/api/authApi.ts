@@ -25,7 +25,7 @@ export const authApi = createApi({
       }),
     }),
     logout: builder.query<any, void>({
-      query: (arg) => ({
+      query: () => ({
         url: "/logout",
         method: "GET",
       }),
