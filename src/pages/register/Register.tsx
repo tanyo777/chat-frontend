@@ -1,7 +1,12 @@
 import { useForm } from "react-hook-form";
 import { NavLink, useNavigate } from "react-router-dom";
-import { useRegisterMutation } from "../../api/authApi";
 import { useEffect } from "react";
+import { TextField, InputLabel, CircularProgress, Button } from "@mui/material";
+
+import { useRegisterMutation } from "../../api/authApi";
+import FormHeading from "../../components/forms/formHeading/FormHeading";
+import { EAlertSeverity } from "../../types/componentProps";
+import FormAlert from "../../components/forms/alert/FormAlert";
 
 const Register = () => {
   const [
@@ -33,49 +38,98 @@ const Register = () => {
   };
 
   return (
-    <div>
-      <form
-        onSubmit={handleSubmit(submitRegistrationFormHandler)}
-        style={{ display: "flex", flexDirection: "column", width: "400px" }}
-      >
-        <label>First name</label>
-        <input {...register("firstName", { required: true })} />
-        {errors.firstName && <p>First name is required</p>}
+    <div className="formContainer">
+      <form onSubmit={handleSubmit(submitRegistrationFormHandler)}>
+        <FormHeading title="Register" />
 
-        <label>Last name</label>
-        <input {...register("lastName", { required: true })} />
-        {errors.lastName && <p>Last name is required</p>}
+        <div className="formControlContainer">
+          <InputLabel>First name</InputLabel>
+          <TextField
+            fullWidth
+            {...register("firstName", { required: "First name is required" })}
+            placeholder="Enter first name..."
+            size="small"
+            helperText={
+              errors.firstName && <p>{errors.firstName.message as string}</p>
+            }
+          />
+        </div>
 
-        <label>Email</label>
-        <input {...register("email", { required: true })} />
-        {errors.email && <p>Email is required</p>}
+        <div className="formControlContainer">
+          <InputLabel>Last name</InputLabel>
+          <TextField
+            fullWidth
+            {...register("lastName", { required: "Last name is required" })}
+            placeholder="Enter last name..."
+            size="small"
+            helperText={
+              errors.lastName && <p>{errors.lastName.message as string}</p>
+            }
+          />
+        </div>
 
-        <label>Password</label>
-        <input {...register("password", { required: true })} type="password" />
-        {errors.password && <p>Password is required</p>}
+        <div className="formControlContainer">
+          <InputLabel>Email</InputLabel>
+          <TextField
+            fullWidth
+            {...register("email", { required: "Email is required" })}
+            placeholder="Enter valid email..."
+            size="small"
+            helperText={errors.email && <p>{errors.email.message as string}</p>}
+          />
+        </div>
 
-        <label>Confirm password</label>
-        <input
-          {...register("rePassword", { required: true })}
-          type="password"
-        />
-        {errors.rePassword && <p>Password confirmation is required</p>}
+        <div className="formControlContainer">
+          <InputLabel>Password</InputLabel>
+          <TextField
+            fullWidth
+            {...register("password", { required: "Password is required" })}
+            placeholder="Enter password..."
+            size="small"
+            type="password"
+            helperText={
+              errors.password && <p>{errors.password.message as string}</p>
+            }
+          />
+        </div>
 
-        {isRegistrationError &&
-          ((error as any).data as any).msg.map(
-            (errorMessage: string, index: string) => (
-              <p key={index}>{errorMessage}</p>
-            )
-          )}
+        <div className="formControlContainer">
+          <InputLabel>Confirm password</InputLabel>
+          <TextField
+            fullWidth
+            {...register("rePassword", {
+              required: "Password confirmation is required",
+            })}
+            placeholder="Confirm password..."
+            size="small"
+            type="password"
+            helperText={
+              errors.rePassword && <p>{errors.rePassword.message as string}</p>
+            }
+          />
+        </div>
 
         <p>
           Already have an account? <NavLink to="/">Login</NavLink>
         </p>
+        {isRegistrationLoading && <CircularProgress />}
 
-        <input
-          type="submit"
-          value={isRegistrationLoading ? "Loading..." : "Register"}
-        />
+        {!isRegistrationLoading && (
+          <Button type="submit" variant="contained">
+            Login
+          </Button>
+        )}
+
+        {isRegistrationError &&
+          ((error as any).data as any).msg.map(
+            (errorMessage: string, index: string) => (
+              <FormAlert
+                key={index}
+                message={errorMessage}
+                severity={EAlertSeverity.ERROR}
+              />
+            )
+          )}
       </form>
     </div>
   );
